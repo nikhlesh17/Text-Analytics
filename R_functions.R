@@ -1,7 +1,10 @@
+
+## Tokenizer - takes care of unigrams and bigrams
 BigramTokenizer <- function(x) {
   NGramTokenizer(x, Weka_control(min = 1, max = 2))
 }
 
+## Text clean up functions
 clean_dtm_bigram <- function(corpus){
   corpus <- tm_map(corpus,removeWords,stopwords("english"))
   dt <- DocumentTermMatrix(corpus,
@@ -9,13 +12,14 @@ clean_dtm_bigram <- function(corpus){
                                                   removePunctuation = TRUE,
                                                   tolower = TRUE,
                                                   removeNumbers = TRUE,
-                                                  stripWhitespace = TRUE
-                                                  # ,stemming = TRUE
+                                                  stripWhitespace = TRUE,
+                                                  stemming = TRUE
                                                   ))
   dt1 <- tidy(dt)
   return(dt1)
 }
 
+# POS tagging
 nltk = import("nltk")
 pos_tagging <- function(dtm){
   temp <- nltk$pos_tag(dtm$term)
@@ -23,6 +27,7 @@ pos_tagging <- function(dtm){
   return(x)
 }
 
+## Function to identify new words as compared to previous years
 new_words <- function(yrval){
   if (yrval == 2006){
     t <- pos2006b %>% anti_join(pos2005b,by = "term")
